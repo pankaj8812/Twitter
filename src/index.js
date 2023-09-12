@@ -1,24 +1,23 @@
-const Express = require("express");
+const express = require("express");
 const  Connect = require("./config/dataBase.js");
-const Tweet = require("./model/tweet.js")
 const { ServerConfig } = require("./config");
-const app = Express();
+const apiRouter = require("./router");
+
+const app = express();
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/api", apiRouter)
+
 
 
 
 app.listen(ServerConfig.PORT, async()=>{
     console.log("Server is up on port :", ServerConfig.PORT);
-    
     await Connect();
-    console.log("connect to database");
-
-    // Tweet.create({
-    //     content: "This is my third tweet",
-    //     likes: 25,
-    //     noOfRetweets: 5,
-    //     comment: "This is my firts comment"
-    // })
-    
+    console.log("connect to database");    
 })
 
 
