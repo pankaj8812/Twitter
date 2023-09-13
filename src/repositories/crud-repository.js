@@ -37,7 +37,16 @@ class CrudRepository{
             throw error;
         }
     }
-
+    async getOne(data){
+        try {
+            const response = await this.model.findOne(data);
+            console.log("inside get One repo: ", response);
+            return response;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     async update(id, data){
         try {
             const response = await this.model.findByIdAndUpdate(id, data); 

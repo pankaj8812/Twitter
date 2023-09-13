@@ -3,6 +3,7 @@ const { tweetService } = require("../service");
 
 async function creatTweet(req,res){
     try {
+        console.log(req.body);
         const tweet = await tweetService.creatTweet({
             content: req.body.content,
             likes: req.body.likes,
