@@ -3,9 +3,15 @@ const {TweetRepository, HashtagRepository} = require("../repositories");
 const tweetrepo = new TweetRepository();
 const hashtagRepo = new HashtagRepository();
 
+
 async function creatTweet(data){
     try {
-        const tweet = await tweetrepo.create(data);
+        const tweet = await tweetrepo.create({
+            content: data.content,
+            noOfRetweets: data.noOfRetweets,
+            user: data.user.id,
+            userName: data.user.email,
+        });
         
         const content = data.content;
         let tags  = content.match(/#+[a-zA-Z0-9(_)]+/g).map( (tag) => tag.substring(1).toLowerCase()); 
@@ -26,8 +32,10 @@ async function creatTweet(data){
             tag.tweets.push(tweet.id);
             tag.save();
         })
-
-        
+        const user = data.user;
+        user.tweets.push(tweet.id);
+        user.save();
+        console.log("user :", user);
         return tweet;
     } catch (error) {
         console.log(error);

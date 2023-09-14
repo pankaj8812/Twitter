@@ -27,7 +27,8 @@ async function signIn(data){
         }
 
         console.log("successfully logged in"); 
-        return true;
+        const token = user.genJWT();
+        return token;
     } catch (error) {
         console.log(error);
         throw error;

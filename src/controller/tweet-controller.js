@@ -9,6 +9,7 @@ async function creatTweet(req,res){
             likes: req.body.likes,
             noOfRetweets: req.body.noOfRetweets,
             comment: req.body.comment,
+            user: req.user,
         });
         return res.status(201).json({
             success:true,

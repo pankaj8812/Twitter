@@ -1,11 +1,12 @@
 const express = require("express");
 const { tweetController, likeController, userController, commentController } = require("../controller");
+const authenticate = require("../middlewares/authentication");
 
 const router = express.Router();
 
 
-router.post("/", tweetController.creatTweet);
-router.get("/", tweetController.getAllTweet);
+router.post("/", authenticate, tweetController.creatTweet);
+router.get("/", authenticate, tweetController.getAllTweet);
 router.get("/:id", tweetController.getTweet);
 router.patch("/:id", tweetController.updateTweet);
 router.delete("/:id", tweetController.deleteTweet);
