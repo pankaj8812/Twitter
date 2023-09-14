@@ -8,12 +8,19 @@ const commentSchema = new mongoose.Schema({
         type : String,
         required: true,
     },
-    like: {
-        type : Number,
-    },
-    comment: {
-        type: String,
-    },
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Like"
+        }
+    ],
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
+    ],
+    
     // Dynamic Reference
     // comment can be mode on a Tweet or a comment itself
     onModel: {

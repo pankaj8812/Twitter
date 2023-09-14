@@ -1,7 +1,8 @@
-const { LikeRepository, TweetRepository } = require("../repositories");
+const { LikeRepository, TweetRepository, CommentRepository } = require("../repositories");
 
 const likeRepo = new LikeRepository();
 const tweetRepo = new TweetRepository();
+const commentRepo = new CommentRepository();
 
 async function toggleLike(data){
     try {
@@ -10,23 +11,21 @@ async function toggleLike(data){
         if(data.modelType == "Tweet"){
             likeable = await tweetRepo.get(data.modelId);
         }else if(data.modelType == "Comment"){
-            //todo
+            likeable = await commentRepo.get(data.modelId);
         }else{
-            console.log("wrong modeltype");
+            throw { message: "wrong modeltype"};
         }
         const exists = await likeRepo.getOne({
             user: data.userId,
             onModel: data.modelType,
             likeable: data.modelId
         });
-        console.log("exists : ", exists);
         let isAdded;
         if(exists){
-            console.log("exists : ", exists);
+            // console.log("exists : ", exists);
             likeable.likes.pull(exists.id);
             await likeable.save();
             likeRepo.delete(exists.id);
-            // this.likeRepo.destroy(exists.id);
             isAdded = false;
         }else{
             const newLike = await likeRepo.create({
@@ -34,7 +33,7 @@ async function toggleLike(data){
                 onModel: data.modelType,
                 likeable: data.modelId 
             });
-            console.log("newLike :", newLike);
+            // console.log("newLike :", newLike);
             likeable.likes.push(newLike);
             await likeable.save();
             isAdded = true;
