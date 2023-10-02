@@ -7,7 +7,7 @@ const commentRepo = new CommentRepository();
 async function toggleLike(data){
     try {
         let likeable;
-        console.log("DATA :", data);
+        // console.log("DATA :", data);
         if(data.modelType == "Tweet"){
             likeable = await tweetRepo.get(data.modelId);
         }else if(data.modelType == "Comment"){

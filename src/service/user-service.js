@@ -25,8 +25,8 @@ async function signIn(data){
                 message: 'Incorrect password'
             }
         }
-
-        console.log("successfully logged in"); 
+        
+        // console.log("successfully logged in"); 
         const token = user.genJWT();
         return token;
     } catch (error) {

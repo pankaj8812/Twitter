@@ -6,6 +6,19 @@ const tweetRepo = new TweetRepository();
 async function createComment(data){
     try {
         const comment = await commentRepo.create(data);
+
+        if(data.onModel == "Tweet"){
+            const tweet = await tweetRepo.get(data.commentable);
+            tweet.comments.push(comment.id);
+            await tweet.save();
+
+        } else  if(data.onModel == "Comment"){
+            const oldComment = await commentRepo.get(data.commentable);
+            oldComment.comments.push(comment.id);
+            await oldComment.save();
+
+        } 
+
         return comment;
     } catch (error) {
         console.log(error);

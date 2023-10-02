@@ -11,31 +11,36 @@ async function creatTweet(data){
             noOfRetweets: data.noOfRetweets,
             user: data.user.id,
             userName: data.user.email,
+            image: data.image,
         });
         
         const content = data.content;
-        let tags  = content.match(/#+[a-zA-Z0-9(_)]+/g).map( (tag) => tag.substring(1).toLowerCase()); 
+        let tags  = content.match(/#+[a-zA-Z0-9(_)]+/g);
         
-        // console.log(tags);
-        let alreadyPresentTags = await hashtagRepo.getHashtagByName(tags);
-        let textOfPresentTags = alreadyPresentTags.map( (tag) => tag.text);
-        let newTags = tags.filter((tag) => !textOfPresentTags.includes(tag));
-        // console.log(alreadyPresentTags);
-        newTags = newTags.map( tag => {
-            return {
-                text: tag,
-                tweets: [tweet.id]
-            }
-        })
-        await hashtagRepo.bulkCreate(newTags);
-        alreadyPresentTags.forEach((tag) => {
-            tag.tweets.push(tweet.id);
-            tag.save();
-        })
+        if(tags != null){
+            tgas = tags.map( (tag) => tag.substring(1).toLowerCase()); 
+            // console.log(tags);
+            let alreadyPresentTags = await hashtagRepo.getHashtagByName(tags);
+            let textOfPresentTags = alreadyPresentTags.map( (tag) => tag.text);
+            let newTags = tags.filter((tag) => !textOfPresentTags.includes(tag));
+            // console.log(alreadyPresentTags);
+            newTags = newTags.map( tag => {
+                return {
+                    text: tag,
+                    tweets: [tweet.id]
+                }
+            })
+            await hashtagRepo.bulkCreate(newTags);
+            alreadyPresentTags.forEach((tag) => {
+                tag.tweets.push(tweet.id);
+                tag.save();
+            })
+        }
+
         const user = data.user;
         user.tweets.push(tweet.id);
         user.save();
-        console.log("user :", user);
+        // console.log("user :", user);
         return tweet;
     } catch (error) {
         console.log(error);
